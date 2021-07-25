@@ -110,8 +110,18 @@ const category = [
 // }, [])
 function App() {
   const {register, control ,handleSubmit, formState : { errors }, getValues } = useForm();
-  const atLeastOne = () => (getValues("checkbox").length ? true : "Please Choose at least one dificult");
-  const atLeastOneMode = () => (getValues("mode").length ? true : "Please Choose at least one Mode");
+  const atLeastOne = () => {
+    let value = getValues("checkbox");
+    if(value.length > 1) return "can only choose one option"
+    if(value.length === 1)  return true
+    return "Please Choose at least one dificult"
+  };
+  const atLeastOneMode = () => {
+    let value = getValues("mode");
+    if(value.length > 1) return "can only choose one option"
+    if(value.length === 1)  return true
+    return "Please Choose at least one Mode"
+  };
   
   console.log(errors)
   return (
@@ -121,55 +131,80 @@ function App() {
           <Form onSubmit={handleSubmit(onSubmit)}>
             <FormContent>
               <FormContentRows>
-                <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
-                <Input {...register("total", {min: {value: 10, message: 'Min Value 10'}, max: {value: 50, message: 'Max Value 50'}})} name="total" title="max value are 50 and min value are 10" id="mainTotalQuestions" step="10" type="range" min="10" max="50"></Input>
-                {
-                  errors.total && <p style={{color: 'white'}}>Error Bro</p>
-                }
-              </FormContentRows>
-              <FormContentRows>
-                <Label htmlFor="mainCategory">Category :</Label>
-                <Controller
-                  defaultValue={category[0]}
-                  name="category"
-                  control={control}
-                  render={({ field }) => <ReactSelect {...field} 
-                      styles={{container: (style, state) => ({...style, width: `100%`}) }}
-                      placeholder="Choose Category" 
-                      id="mainCategory" 
-                      options={category}
-                  />}
-                />
-              </FormContentRows>
-              <FormContentRows>
-                <Label htmlFor="mainDificult">Dificult :</Label>
-                <Checkboxs>
+                <FormContentRowsMain>
+                  <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
+                  <Input {...register("total", {min: {value: 10, message: 'Min Value 10'}, max: {value: 50, message: 'Max Value 50'}})} name="total" title="max value are 50 and min value are 10" id="mainTotalQuestions" step="10" type="range" min="10" max="50"></Input>
+                </FormContentRowsMain>
+                <FormContentRowsError>
                     {
-                      ['Easy', 'Medium', 'Hard'].map((value) => {
-                        return (
-                          <Checkbox  key={value} >
-                            <Input {...register('checkbox', { validate: atLeastOne})} key={value} value={value} type="checkbox"/> 
-                            <Label htmlFor={`mainCheckbox${value}`}>{value}</Label>
-                          </Checkbox>
-                        )
-                      })
+                      errors.total && <p style={{color: 'white'}}>Error Bro</p>
                     }
-                </Checkboxs>
+                </FormContentRowsError>
               </FormContentRows>
               <FormContentRows>
-                <Label htmlFor="mainMode">Mode :</Label>
-                <Checkboxs>
+                <FormContentRowsMain>
+                  <Label htmlFor="mainCategory">Category :</Label>
+                  <Controller
+                    defaultValue={category[0]}
+                    name="category"
+                    control={control}
+                    render={({ field }) => <ReactSelect {...field} 
+                        styles={{container: (style, state) => ({...style, width: `100%`}) }}
+                        placeholder="Choose Category" 
+                        id="mainCategory" 
+                        options={category}
+                    />}
+                  />
+                </FormContentRowsMain>
+                <FormContentRowsError>
+                    {
+                      errors.category && <p style={{color: 'white'}}>{errors.category.message}</p>
+                    }
+                </FormContentRowsError>
+              </FormContentRows>
+              <FormContentRows>
+                <FormContentRowsMain>
+                  <Label htmlFor="mainDificult">Dificult :</Label>
+                  <Checkboxs>
                       {
                         ['Easy', 'Medium', 'Hard'].map((value) => {
                           return (
                             <Checkbox  key={value} >
-                              <Input {...register('mode', { validate: atLeastOneMode})} key={value} value={value} type="checkbox"/> 
-                              <Label htmlFor={`mainMode${value}`}>{value}</Label>
+                              <Input {...register('checkbox', { validate: atLeastOne})} key={value} value={value} type="checkbox"/> 
+                              <Label htmlFor={`mainCheckbox${value}`}>{value}</Label>
                             </Checkbox>
                           )
                         })
                       }
-                </Checkboxs>
+                  </Checkboxs>
+                </FormContentRowsMain>
+                <FormContentRowsError>
+                    {
+                      errors.checkbox && <p style={{color: 'white'}}>{errors.checkbox.message}</p>
+                    }
+                </FormContentRowsError>
+              </FormContentRows>
+              <FormContentRows>
+                <FormContentRowsMain>
+                  <Label htmlFor="mainMode">Mode :</Label>
+                  <Checkboxs>
+                        {
+                          ['TrueOrFalse', 'Multiple'].map((value) => {
+                            return (
+                              <Checkbox  key={value} >
+                                <Input {...register('mode', { validate: atLeastOneMode})} key={value} value={value} type="checkbox"/> 
+                                <Label htmlFor={`mainMode${value}`}>{value}</Label>
+                              </Checkbox>
+                            )
+                          })
+                        }
+                  </Checkboxs>
+                </FormContentRowsMain>
+                <FormContentRowsError>
+                  { 
+                      errors.mode && <p style={{color: 'white'}}>{errors.mode.message}</p>
+                    }
+                </FormContentRowsError>
               </FormContentRows>
             </FormContent>
             <FormFooter>
@@ -236,6 +271,12 @@ const FormFooter = styled.div`
 
 const FormContentRows = styled.div`
   display: grid;
+  grid-template-rows: 2fr 1fr;
+  width: 100%;
+`;
+
+const FormContentRowsMain = styled.div`
+  display: grid;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
@@ -244,6 +285,13 @@ const FormContentRows = styled.div`
   label {
     margin: .5rem
   }
+`;
+
+const FormContentRowsError = styled.div`
+  display: flex;
+  justify-content: center;
+  align-center: center;
+  width: 100%;
 `;
 
 const Heading = styled.h1`
