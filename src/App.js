@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import ReactSelect from "react-select";
+import { useForm, Controller } from 'react-hook-form';
 import "./App.css";
 
 const category = [
@@ -108,55 +109,81 @@ const category = [
 //     .then(result => console.log(result))
 // }, [])
 function App() {
+  const {register, control ,handleSubmit, formState : { errors }, getValues } = useForm();
+  const atLeastOne = () => (getValues("checkbox").length ? true : "Please Choose at least one dificult");
+  const atLeastOneMode = () => (getValues("mode").length ? true : "Please Choose at least one Mode");
+  
+  console.log(errors)
   return (
     <AppContainer>
       <Heading>Quiz Game</Heading>
       <MainContainer>
-        <MainContainerMain>
-          <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
-          <Input name="tota;" title="max value are 50 and min value are 10" id="mainTotalQuestions" step="10" type="range" min="10" max="50"></Input>
-        </MainContainerMain>
-        <MainContainerMain>
-          <Label htmlFor="mainCategory">Category :</Label>
-          <ReactSelect name="category" styles={{container: (style, state) => ({...style, width: `100%`}) }} placeholder="Choose Category" id="mainCategory" options={category}></ReactSelect>
-        </MainContainerMain>
-        <MainContainerMain>
-          <Label htmlFor="mainDificult">Dificult :</Label>
-          <Checkboxs>
-            <Checkbox>
-              <Input name="dificult"  id="mainCheckboxEasy" type="checkbox"/> 
-              <Label htmlFor="mainCheckboxEasy">Easy</Label>
-            </Checkbox>
-            <Checkbox>
-              <Input name="dificult" id="mainCheckboxMedium" type="checkbox"/> 
-              <Label htmlFor="mainCheckboxMedium">Medium</Label>
-            </Checkbox>
-            <Checkbox>
-              <Input name="dificult" id="mainCheckboxHard" type="checkbox"/> 
-              <Label id="mainCheckboxHard">Hard</Label>
-            </Checkbox>
-          </Checkboxs>
-        </MainContainerMain>
-        <MainContainerMain>
-          <Label htmlFor="mainMode">Mode :</Label>
-          <Checkboxs>
-            <Checkbox>
-              <Input id="mainCheckboxTrueOrFalse" type="checkbox"/> 
-              <Label htmlFor="mainCheckboxTrueOrFalse">True Or False</Label>
-            </Checkbox>
-            <Checkbox>
-              <Input id="mainCheckboxMultiple" type="checkbox"/> 
-              <Label htmlFor="mainCheckboxMultiple">Multiple</Label>
-            </Checkbox>
-          </Checkboxs>
-        </MainContainerMain>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <FormContent>
+              <FormContentRows>
+                <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
+                <Input {...register("total", {min: {value: 10, message: 'Min Value 10'}, max: {value: 50, message: 'Max Value 50'}})} name="total" title="max value are 50 and min value are 10" id="mainTotalQuestions" step="10" type="range" min="10" max="50"></Input>
+                {
+                  errors.total && <p style={{color: 'white'}}>Error Bro</p>
+                }
+              </FormContentRows>
+              <FormContentRows>
+                <Label htmlFor="mainCategory">Category :</Label>
+                <Controller
+                  defaultValue={category[0]}
+                  name="category"
+                  control={control}
+                  render={({ field }) => <ReactSelect {...field} 
+                      styles={{container: (style, state) => ({...style, width: `100%`}) }}
+                      placeholder="Choose Category" 
+                      id="mainCategory" 
+                      options={category}
+                  />}
+                />
+              </FormContentRows>
+              <FormContentRows>
+                <Label htmlFor="mainDificult">Dificult :</Label>
+                <Checkboxs>
+                    {
+                      ['Easy', 'Medium', 'Hard'].map((value) => {
+                        return (
+                          <Checkbox  key={value} >
+                            <Input {...register('checkbox', { validate: atLeastOne})} key={value} value={value} type="checkbox"/> 
+                            <Label htmlFor={`mainCheckbox${value}`}>{value}</Label>
+                          </Checkbox>
+                        )
+                      })
+                    }
+                </Checkboxs>
+              </FormContentRows>
+              <FormContentRows>
+                <Label htmlFor="mainMode">Mode :</Label>
+                <Checkboxs>
+                      {
+                        ['Easy', 'Medium', 'Hard'].map((value) => {
+                          return (
+                            <Checkbox  key={value} >
+                              <Input {...register('mode', { validate: atLeastOneMode})} key={value} value={value} type="checkbox"/> 
+                              <Label htmlFor={`mainMode${value}`}>{value}</Label>
+                            </Checkbox>
+                          )
+                        })
+                      }
+                </Checkboxs>
+              </FormContentRows>
+            </FormContent>
+            <FormFooter>
+              <Button type="submit" title="start the quiz">Start !!!</Button>
+            </FormFooter>
+          </Form>
       </MainContainer>
-      <FooterContainer>
-          <Button title="start the quiz">Start !!!</Button>
-      </FooterContainer>
     </AppContainer>
   );
 }
+
+const onSubmit = (data) => {
+ console.group(data)
+};
 
 export default App;
 
@@ -171,22 +198,43 @@ const AppContainer = styled.div`
   background-color: var(--bg-secondary);
   border-radius: 1rem;
   display: grid;
-  grid-template-rows: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 2fr;
   justify-items: center;
   padding: 1rem;
-`;
-
+  user-select: none
+  `;
+  
 const MainContainer = styled.main`
-  background-color: var(--bg-primary);
   display: grid;
-  // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  background-color: var(--bg-primary);
+  width: 100%;
+  `;
+  
+  
+const FormContent = styled.div`
+  display: grid;
+  width: 100%;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  width: 100%;
   justify-items: center;
+  align-items: center;
 `;
 
-const MainContainerMain = styled.div`
+const FormFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center
+  `;
+  
+  const Form = styled.form`
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  align-items: center;
+`;
+
+const FormContentRows = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
@@ -229,10 +277,6 @@ const Checkbox = styled.div`
   align-items: center;
   
 `;
-
-const FooterContainer = styled.div`
-  display: flex;
-`
 
 const Button = styled.button`
   padding: 1rem;
