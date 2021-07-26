@@ -111,7 +111,7 @@ const category = [
 function App() {
   const {register, control ,handleSubmit, formState : { errors }, getValues } = useForm();
   const atLeastOne = () => {
-    let value = getValues("checkbox");
+    let value = getValues("dificult");
     if(value.length > 1) return "can only choose one option"
     if(value.length === 1)  return true
     return "Please Choose at least one dificult"
@@ -135,11 +135,12 @@ function App() {
                   <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
                   <Input {...register("total", {min: {value: 10, message: 'Min Value 10'}, max: {value: 50, message: 'Max Value 50'}})} name="total" title="max value are 50 and min value are 10" id="mainTotalQuestions" step="10" type="range" min="10" max="50"></Input>
                 </FormContentRowsMain>
-                <FormContentRowsError>
                     {
-                      errors.total && <p style={{color: 'white'}}>Error Bro</p>
+                      errors.total && 
+                        (<FormContentRowsError>
+                          <p>{errors.total.message}</p>
+                        </FormContentRowsError>)
                     }
-                </FormContentRowsError>
               </FormContentRows>
               <FormContentRows>
                 <FormContentRowsMain>
@@ -156,11 +157,12 @@ function App() {
                     />}
                   />
                 </FormContentRowsMain>
-                <FormContentRowsError>
                     {
-                      errors.category && <p style={{color: 'white'}}>{errors.category.message}</p>
+                      errors.category && 
+                        (<FormContentRowsError>
+                          <p>{errors.category.message}</p>
+                        </FormContentRowsError>)
                     }
-                </FormContentRowsError>
               </FormContentRows>
               <FormContentRows>
                 <FormContentRowsMain>
@@ -170,19 +172,20 @@ function App() {
                         ['Easy', 'Medium', 'Hard'].map((value) => {
                           return (
                             <Checkbox  key={value} >
-                              <Input {...register('checkbox', { validate: atLeastOne})} key={value} value={value} type="checkbox"/> 
-                              <Label htmlFor={`mainCheckbox${value}`}>{value}</Label>
+                              <Input {...register('dificult', { validate: atLeastOne})} key={value} value={value} type="checkbox"/> 
+                              <Label htmlFor={`mainDificult${value}`}>{value}</Label>
                             </Checkbox>
                           )
                         })
                       }
                   </Checkboxs>
                 </FormContentRowsMain>
-                <FormContentRowsError>
                     {
-                      errors.checkbox && <p style={{color: 'white'}}>{errors.checkbox.message}</p>
+                      errors.dificult && 
+                        (<FormContentRowsError>
+                          <p>{errors.dificult.message}</p>
+                        </FormContentRowsError>)
                     }
-                </FormContentRowsError>
               </FormContentRows>
               <FormContentRows>
                 <FormContentRowsMain>
@@ -200,11 +203,12 @@ function App() {
                         }
                   </Checkboxs>
                 </FormContentRowsMain>
-                <FormContentRowsError>
-                  { 
-                      errors.mode && <p style={{color: 'white'}}>{errors.mode.message}</p>
+                    {
+                      errors.mode && 
+                        (<FormContentRowsError>
+                          <p>{errors.mode.message}</p>
+                        </FormContentRowsError>)
                     }
-                </FormContentRowsError>
               </FormContentRows>
             </FormContent>
             <FormFooter>
@@ -272,6 +276,8 @@ const FormFooter = styled.div`
 const FormContentRows = styled.div`
   display: grid;
   grid-template-rows: 2fr 1fr;
+  align-items: center;
+  jusitfy-items: center;
   width: 100%;
 `;
 
@@ -288,10 +294,13 @@ const FormContentRowsMain = styled.div`
 `;
 
 const FormContentRowsError = styled.div`
-  display: flex;
-  justify-content: center;
-  align-center: center;
-  width: 100%;
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: .25rem .75rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
 `;
 
 const Heading = styled.h1`
