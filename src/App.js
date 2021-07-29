@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BrowserRouter as Routers, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Routers, Redirect, Route, Switch} from 'react-router-dom';
 import Form from './Form.js';
 import Questions from './Questions.js';
 import Finish from './Finish.js';
@@ -14,6 +14,7 @@ function App() {
             <Route exact path="/" component={Form}></Route>
             <Route path="/questions" component={Questions}></Route>
             <Route path="/finish" component={Finish}></Route>
+            <Route path="*" component={() => (<Redirect to="/"></Redirect>)}></Route>
           </Switch>
         </MainContainer>
       </AppContainer>
@@ -39,13 +40,35 @@ const AppContainer = styled.div`
   justify-items: center;
   padding: 1rem;
   user-select: none;
-  overflow: auto
+  overflow: hidden;
   `;
   
 const MainContainer = styled.main`
   display: grid;
   background-color: var(--bg-primary);
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: .5rem;
+  }
+  
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: var(--bg-primary)
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background:  rgb(213, 68, 116)
+  }
+  
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background:  rgb(180, 35, 82)
+  }
   `;
 
 const Heading = styled.h1`

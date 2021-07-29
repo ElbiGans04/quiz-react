@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import styled from 'styled-components'
+import { useSelector } from "react-redux"
 import { Container } from './style-component'
 function Finish () {
     const [result, setResult] = useState({});
-    const questions = useSelector(state => state.questions.questions)
-    const answers = useSelector(state => state.questions.answers)
-    const userID = useSelector(state => state.questions.userID)
+    const questions = useSelector(state => state.questions)
 
     // Kirim Jawaban Ke server
     useEffect(() => {
         async function sendAnswers() {
             try {
                 
-                if(answers.length > 0) {
+                if(questions.answers.length > 0) {
                     const urlData = new URLSearchParams();
-                    urlData.append('userID', userID);
-                    urlData.append('answers', JSON.stringify(answers));
+                    urlData.append('userID', questions.userID);
+                    urlData.append('answers', JSON.stringify(questions.answers));
                     const send = await(await fetch('http://localhost:8000/questions', {
                         body: urlData.toString(),
                         method: 'delete', 
@@ -34,7 +31,7 @@ function Finish () {
         };
 
         sendAnswers()
-    }, [ answers, userID, questions]);
+    }, [ questions ]);
     
     return (
         <Container>

@@ -14,10 +14,11 @@ function Questions(props) {
       number: 0,
       finish: false,
       answers: [],
-  })
+  });
+
   const question = questions[number];
   const [checked, setChecked] = useState(() => {
-    return question?.type === "boolean"
+      return question?.type === "boolean"
       ? new Array(2).fill(false)
       : new Array(4).fill(false);
   });
@@ -31,16 +32,17 @@ function Questions(props) {
   };
 
   const submitHandle = (value) => {
-    setValue("question", []);
-    setChecked(
-      question?.type === "boolean"
-        ? new Array(2).fill(false)
-        : new Array(4).fill(false)
-    );
-
-
-    if ((questions.length - 1) === number) dispatchReducer({type: 'final', payload: {value: value.question[0]}})
-    else dispatchReducer({type: 'next', payload: {value: value.question[0]}})
+      // Check Jika ini soal terakhir      
+      if ((questions.length - 1) === number) dispatchReducer({type: 'final', payload: {value: value.question[0]}})
+      else {
+        setValue("question", []);
+        setChecked(
+          question?.type === "boolean"
+            ? new Array(2).fill(false)
+            : new Array(4).fill(false)
+        );
+        dispatchReducer({type: 'next', payload: {value: value.question[0]}})
+    }
   };
 
   useEffect(() => {

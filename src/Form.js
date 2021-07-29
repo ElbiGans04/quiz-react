@@ -111,8 +111,8 @@ const category = [
 function Form (props) {
     const {register, control ,handleSubmit, formState : { errors }, getValues } = useForm();
     const dispatch = useDispatch();
-    const loading = useSelector(state => state.questions.loading);
-    const results = useSelector(state => state.questions.questions);
+    const {loading, questions} = useSelector(state => state.questions);
+    
     const onSubmit = (data) => {
       const url = `https://opentdb.com/api.php?amount=${data.total}&category=${data.category.value}&difficulty=${data.dificult[0].toLowerCase()}&type=${data.mode[0]}`;
 
@@ -134,7 +134,7 @@ function Form (props) {
 
     return (
         <>
-        {results.length > 0 ? (<Redirect to="/questions"></Redirect>) : (
+        {questions.length > 0 ? (<Redirect to="/questions"></Redirect>) : (
           <FormComponent onSubmit={handleSubmit(onSubmit)}>
               {
                 loading === 'loading' ? (<div className="loader"></div>) : (
@@ -246,6 +246,13 @@ export default Form;
 // Styled Component
 const FormContent2 = styled(FormContent)`
   grid-template-columns: 1fr 1fr;
+  
+
+  @media (max-width: 576px) {
+    & {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
 `;
 
 const Label = styled.label`

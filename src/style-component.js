@@ -47,6 +47,12 @@ export const FormContentRowsMain = styled.div`
   box-sizing: border-box;
   label {
     margin: .5rem
+  };
+
+  @media (max-width: 576px) {
+    & {
+      justify-items: flex-start;
+    }
   }
 `;
 
