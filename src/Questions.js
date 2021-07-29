@@ -3,31 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, ErrorAlert } from "./style-component";
+import { Button, ErrorAlert, Container } from "./style-component";
 import { answersAdd } from "./features/questions/questionsSlice";
 
 function Questions(props) {
-  const {
-    register,
-    formState: { errors },
-    getValues,
-    handleSubmit,
-    setValue,
-  } = useForm();
   const dispatch = useDispatch();
   const questions = useSelector((state) => state.questions.questions);
-//   const [state, dispatch] = useReducer(reducer, {
-//       number:
-//   })
-  const [number, setNumber] = useState(0);
+  const { register, formState: { errors }, getValues, handleSubmit, setValue} = useForm();
+  const [{number, finish, answers}, dispatchReducer] = useReducer(reducer, {
+      number: 0,
+      finish: false,
+      answers: [],
+  })
   const question = questions[number];
-  const [finish, setFinish] = useState(false);
-  const [answers, setAnswers] = useState([]);
   const [checked, setChecked] = useState(() => {
     return question?.type === "boolean"
       ? new Array(2).fill(false)
       : new Array(4).fill(false);
   });
+
 
   const atLeastOne = () => {
     let value = getValues("question");
@@ -37,17 +31,6 @@ function Questions(props) {
   };
 
   const submitHandle = (value) => {
-    //  Saat Masih Ada soal
-    setAnswers((state) => {
-      let newAnswers = [...state];
-      newAnswers[number] = value.question[0];
-
-      if (questions.length - 1 == number) { 
-          setFinish(true)
-      }
-      return newAnswers;
-    });
-
     setValue("question", []);
     setChecked(
       question?.type === "boolean"
@@ -55,17 +38,14 @@ function Questions(props) {
         : new Array(4).fill(false)
     );
 
-    if (questions.length - 1 == number) {
-    //   setFinish(true);
-    //   dispatch(answersAdd(answers));
-    } else {
-      setNumber((state) => state + 1);
-    }
+
+    if ((questions.length - 1) === number) dispatchReducer({type: 'final', payload: {value: value.question[0]}})
+    else dispatchReducer({type: 'next', payload: {value: value.question[0]}})
   };
 
   useEffect(() => {
-    dispatch(answersAdd(answers));
-  }, [finish])
+    if (finish) dispatch(answersAdd(answers));
+  }, [finish, answers, dispatch])
 
   const checkboxHandle = (target) => {
     const newChecked = checked.map((value, index) =>
@@ -80,7 +60,7 @@ function Questions(props) {
         <Redirect to="/"></Redirect>
       ) : (
         <>
-          {finish ? (
+          {(questions.length === number && finish) ? (
             <Redirect to="/finish"></Redirect>
           ) : (
             <Container>
@@ -180,30 +160,16 @@ function Questions(props) {
 
 function reducer (state, action) {
     switch (action.type) {
-        case 'increment':
-          return {count: state.count + 1};
-        case 'decrement':
-          return {count: state.count - 1};
+        case 'next':
+          return { finish: false ,number: state.number + 1, answers: [...state.answers, action.payload.value]};
+        case 'final':
+            return {finish: true,number: state.number + 1 ,answers: [...state.answers, action.payload.value]}
         default:
           return state
     }
 }
 
 //  Styled Component
-const Container = styled.div`
-    display: grid;
-    justify-items: center;
-    align-center;
-    box-shadow: var(--boxShadow);
-    padding: 3rem;
-    width: 100%;;
-    box-sizing: border-box;
-    grid-template-rows: 1fr 2fr;
-    color: var(--textNormal);
-    gap: 1.5rem 0;
-    height: 100%;
-`;
-
 const Header = styled.div`
   display: grid;
   justify-self: flex-start;

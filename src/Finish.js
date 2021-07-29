@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import styled from 'styled-components'
+import { Container } from './style-component'
 function Finish () {
-    const results = useState({});
+    const [result, setResult] = useState({});
     const questions = useSelector(state => state.questions.questions)
     const answers = useSelector(state => state.questions.answers)
     const userID = useSelector(state => state.questions.userID)
@@ -21,8 +23,9 @@ function Finish () {
                         headers: {
                         'Content-type' : 'application/vnd.api+json'
                         }
-                    })).text();
-                    console.log(send)
+                    })).json();
+                    
+                    setResult(send);
                 }
             } catch (err) {
                 alert('error')
@@ -34,13 +37,17 @@ function Finish () {
     }, [ answers, userID, questions]);
     
     return (
-        <>
-         
-        </>
+        <Container>
+         {
+            result ? 
+            (
+            <div>
+                <h1>Score : {result?.meta?.score}</h1>
+            </div>
+            ) : (<div className="loader"></div>)
+         }
+        </Container>
         )
 };
-// {/* {
-//    results ? <div></div> : (<div className="loader"></div>)
-// } */}
 
 export default Finish;

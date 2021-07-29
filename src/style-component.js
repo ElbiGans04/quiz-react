@@ -1,5 +1,19 @@
 import styled from "styled-components";
 
+export const Container = styled.div`
+    width: 100%;;
+    height: 100%;
+    display: grid;
+    justify-items: center;
+    align-center;
+    box-shadow: var(--boxShadow);
+    padding: 3rem;
+    box-sizing: border-box;
+    grid-template-rows: 1fr 2fr;
+    color: var(--textNormal);
+    gap: 1.5rem 0;
+`;
+
 export const Form = styled.form`
   width: 100%;
   display: grid;
