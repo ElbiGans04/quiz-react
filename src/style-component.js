@@ -6,7 +6,6 @@ export const Container = styled.div`
     display: grid;
     justify-items: center;
     align-center;
-    box-shadow: var(--boxShadow);
     padding: 3rem;
     box-sizing: border-box;
     grid-template-rows: 1fr 2fr;

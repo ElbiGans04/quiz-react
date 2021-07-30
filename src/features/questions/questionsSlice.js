@@ -1,17 +1,18 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 //  Thunk Funtions
-export const sendQuestions = createAsyncThunk('questions/sendQuestions', async ({url, userID}) => {
+export const sendQuestions = createAsyncThunk('questions/sendQuestions', async ({url, userID, name}) => {
     try {
         const data = await (await fetch(url)).json();
 
         // Buat url
         const urlData = new URLSearchParams();
         urlData.append('id', userID);
+        urlData.append('name', name);
         urlData.append('questions', JSON.stringify(data.results));
 
         // Send to server
-        if(data.results.length > 0) await fetch(`http://localhost:8000/questions`, {
+        if(data.results.length > 0) await fetch(`http://localhost:8000/user/quiz`, {
           body: urlData.toString(), 
           method: 'post', 
           headers: {
@@ -20,7 +21,7 @@ export const sendQuestions = createAsyncThunk('questions/sendQuestions', async (
         });
 
 
-        return ({results: data.results, userID})
+        return ({results: data.results, userID, name})
 
       } catch (err) {
         console.log(err)
@@ -33,7 +34,8 @@ const questionsSlice = createSlice({
         questions : [],
         answers: [],
         userID: '',
-        loading : 'iddle'
+        loading : 'iddle',
+        name: '',
     },
     reducers: {
         questionsAdd (state, action) {
@@ -52,6 +54,7 @@ const questionsSlice = createSlice({
                 state.questions = [...action.payload.results];
                 state.userID = `${action.payload.userID}`;
                 state.loading = 'iddle';
+                state.name = action.payload.name;
             }).addCase(sendQuestions.rejected, (state, action) => {
                 state.loading = 'iddle';
             })

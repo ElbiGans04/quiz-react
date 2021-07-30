@@ -38,9 +38,9 @@ const AppContainer = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr;
   justify-items: center;
-  padding: 1rem;
   user-select: none;
   overflow: hidden;
+  padding: 1rem 0;
   `;
   
 const MainContainer = styled.main`
@@ -51,6 +51,8 @@ const MainContainer = styled.main`
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  box-shadow: var(--boxShadow);
+  padding: 1rem;
   &::-webkit-scrollbar {
     width: .5rem;
   }

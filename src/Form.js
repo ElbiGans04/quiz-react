@@ -117,7 +117,7 @@ function Form (props) {
       const url = `https://opentdb.com/api.php?amount=${data.total}&category=${data.category.value}&difficulty=${data.dificult[0].toLowerCase()}&type=${data.mode[0]}`;
 
       // Kirim 
-      dispatch(sendQuestions({url, userID: uuid4()}))
+      dispatch(sendQuestions({url, userID: uuid4(), name: data.name}))
     };
     const atLeastOne = () => {
       let value = getValues("dificult");
@@ -140,6 +140,18 @@ function Form (props) {
                 loading === 'loading' ? (<div className="loader"></div>) : (
                 <>
                 <FormContent2>
+                  <FormContentRows>
+                    <FormContentRowsMain>
+                      <Label htmlFor="mainName">Name :</Label>
+                      <Input {...register("name", {required: 'please insert name'})} name="name" title="name" id="mainName"></Input>
+                    </FormContentRowsMain>
+                        {
+                          errors.name && 
+                            (<ErrorAlert>
+                              <p>{errors.name.message}</p>
+                            </ErrorAlert>)
+                        }
+                  </FormContentRows>
                   <FormContentRows>
                     <FormContentRowsMain>
                       <Label htmlFor="mainTotalQuestions">Number of questions :</Label>
@@ -260,7 +272,22 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  border-radius: 1rem;
+  font-size: 16px;
+  font-size: max(16px, 1em);
+  font-family: inherit;
+  background-color: #fff;
+  border: 2px solid var(--input-border);
+  border-radius: 4px;
+  outline: none;
+  padding: 0.25em 0.5em;
+  &:not {
+    line-height: 1;
+    height: 2.25rem;
+  }
+
+  &[type=range] {
+    padding: 0.25em 0;
+  }
 `;
 
 const Checkboxs = styled.div`

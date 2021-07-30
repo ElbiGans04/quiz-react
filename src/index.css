@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   -webkit-font-smoothing: antialiased;
   --bg: #282c35;
@@ -15,6 +21,10 @@
   --form-shadow: 0 2px 15px 0 rgba(26,26,27,0.637);
   --stdPadding: .8rem;
   --boxShadow: 0.3rem 0.3rem 0.8rem rgba(0, 0, 0, 0.5);
+  --input-border: #8b8a8b;
+  --input-focus-h: 245;
+  --input-focus-s: 100%;
+  --input-focus-l: 42%;
 }
 body {
   margin: 0;
