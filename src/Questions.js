@@ -20,19 +20,12 @@ function Questions(props) {
   const question = questions[number];
 
   // Random Jawaban
-  const answer = randomAnswer(question.correct_answer, question.incorrect_answers);
-  console.log(answer)
+  const answer = randomAnswer(question?.correct_answer, question?.incorrect_answers);
 
-
-  // Kalo bisa pisahkan component input
-  const [checked, setChecked] = useState(() => {
-      return question?.type === "boolean"
-      ? new Array(2).fill(false)
-      : new Array(4).fill(false);
-  });
 
   const atLeastOne = () => {
     let value = getValues("question");
+    console.log(value)
     if (value.length > 1) return "can only choose one option";
     if (value.length === 1) return true;
     return "Please Choose at least one question";
@@ -43,11 +36,6 @@ function Questions(props) {
       if ((questions.length - 1) === number) dispatchReducer({type: 'final', payload: {value: value.question[0]}})
       else {
         setValue("question", []);
-        setChecked(
-          question?.type === "boolean"
-            ? new Array(2).fill(false)
-            : new Array(4).fill(false)
-        );
         dispatchReducer({type: 'next', payload: {value: value.question[0]}})
     }
   };
@@ -55,13 +43,6 @@ function Questions(props) {
   useEffect(() => {
     if (finish) dispatch(answersAdd(answers));
   }, [finish, answers, dispatch])
-
-  const checkboxHandle = (target) => {
-    const newChecked = checked.map((value, index) =>
-      index === target ? !value : value
-    );
-    setChecked(newChecked);
-  };
 
   return (
     <>
@@ -92,10 +73,9 @@ function Questions(props) {
                         <MainAnswerRows key={index}>
                           <input
                             type="checkbox"
-                            onClick={() => checkboxHandle(index)}
-                            checked={checked[index]}
+                            defaultChecked={false}
                             value={value}
-                            {...register("question", { validate: atLeastOne })}
+                            {...register('question', {validate: atLeastOne})}
                           ></input>
                           <label>{value}</label>
                         </MainAnswerRows>
@@ -116,12 +96,6 @@ function Questions(props) {
   );
 };
 
-function CheckBox (props) {
-  const [check, setCheck] = useState(false);
-  return (
-    <input type="checkbox" {...props} checked={check} onClick={() => setCheck(state => !state)}></input>
-  )
-}
 
 function reducer (state, action) {
     switch (action.type) {
@@ -141,20 +115,22 @@ const random = (min = 0, max = 50) => {
 };
 
 function randomAnswer(correct, incorrect) {
-	let result = [...incorrect];
-  
-  
-	// Dimana seharusnya correct value berada
-  const correctIndex = random(0, incorrect.length);
-  
-  // Check Jika memang nilainya undefined
-  if(result[correctIndex] === undefined) result[correctIndex] = correct
-  else {
-  	result.push(result[correctIndex]);
-    result[correctIndex] = correct;
+  if(correct && incorrect) {
+    let result = [...incorrect];
+    
+    
+    // Dimana seharusnya correct value berada
+    const correctIndex = random(0, incorrect.length);
+    
+    // Check Jika memang nilainya undefined
+    if(result[correctIndex] === undefined) result[correctIndex] = correct
+    else {
+      result.push(result[correctIndex]);
+      result[correctIndex] = correct;
+    }
+    
+    return result
   }
-  
-  return result
 }
 
 //  Styled Component
