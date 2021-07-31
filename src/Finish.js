@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux"
 import { Container, Button, Heading } from './style-component'
 import styled from 'styled-components'
-import {Redirect} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function Finish () {
  
@@ -53,8 +53,9 @@ function Finish () {
                 </ContainerMainContent>
             </ContainerMain>
             <ContainerFooter>
-                <Redirect to="/score" component={() => <Button>See the highest score</Button>} />
-                
+                <Button>
+                    <Link to="/score" style={{width: '100%', height: '100%', textDecoration: `none`, color: 'white'}}>See the highest score</Link>
+                </Button>
                 <Button>
                     <a style={{width: '100%', height: '100%', textDecoration: `none`, color: 'white'}} href="/">Play Again</a>
                 </Button>
