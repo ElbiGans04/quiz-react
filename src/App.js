@@ -3,6 +3,7 @@ import {BrowserRouter as Routers, Redirect, Route, Switch} from 'react-router-do
 import Form from './Form.js';
 import Questions from './Questions.js';
 import Finish from './Finish.js';
+import Score from './Score.js';
 
 function App() {  
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route exact path="/" component={Form}></Route>
             <Route path="/questions" component={Questions}></Route>
             <Route path="/finish" component={Finish}></Route>
+            <Route path="/score" component={Score}></Route>
             <Route path="*" component={() => (<Redirect to="/"></Redirect>)}></Route>
           </Switch>
         </MainContainer>

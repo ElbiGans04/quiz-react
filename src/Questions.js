@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, ErrorAlert, Container } from "./style-component";
+import { Button, ErrorAlert, Container, Heading} from "./style-component";
 import { answersAdd } from "./features/questions/questionsSlice";
 
 function Questions(props) {
@@ -16,13 +16,20 @@ function Questions(props) {
       answers: [],
   });
 
+  // satuan soal
   const question = questions[number];
+
+  // Random Jawaban
+  const answer = randomAnswer(question.correct_answer, question.incorrect_answers);
+  console.log(answer)
+
+
+  // Kalo bisa pisahkan component input
   const [checked, setChecked] = useState(() => {
       return question?.type === "boolean"
       ? new Array(2).fill(false)
       : new Array(4).fill(false);
   });
-
 
   const atLeastOne = () => {
     let value = getValues("question");
@@ -76,76 +83,25 @@ function Questions(props) {
               </Header>
               <Main>
                 <MainQuestion>
-                  <h1>{question.question}</h1>
+                  <Heading>{question.question}</Heading>
                 </MainQuestion>
                 <MainAnswer onSubmit={handleSubmit(submitHandle)}>
-                  {question.type === "boolean" ? (
-                    <>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(0)}
-                          checked={checked[0]}
-                          value="true"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>true</label>
-                      </MainAnswerRows>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(1)}
-                          checked={checked[1]}
-                          value="false"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>false</label>
-                      </MainAnswerRows>
-                    </>
-                  ) : (
-                    <>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(0)}
-                          checked={checked[0]}
-                          value="a"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>A</label>
-                      </MainAnswerRows>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(1)}
-                          checked={checked[1]}
-                          value="b"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>B</label>
-                      </MainAnswerRows>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(2)}
-                          checked={checked[2]}
-                          value="c"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>C</label>
-                      </MainAnswerRows>
-                      <MainAnswerRows>
-                        <input
-                          type="checkbox"
-                          onClick={() => checkboxHandle(3)}
-                          checked={checked[3]}
-                          value="d"
-                          {...register("question", { validate: atLeastOne })}
-                        ></input>
-                        <label>D</label>
-                      </MainAnswerRows>
-                    </>
-                  )}
+                  {
+                    answer.map((value, index) => {
+                      return (
+                        <MainAnswerRows key={index}>
+                          <input
+                            type="checkbox"
+                            onClick={() => checkboxHandle(index)}
+                            checked={checked[index]}
+                            value={value}
+                            {...register("question", { validate: atLeastOne })}
+                          ></input>
+                          <label>{value}</label>
+                        </MainAnswerRows>
+                      )
+                    })
+                  }
                   {errors.question && (
                     <ErrorAlert>{errors.question.message}</ErrorAlert>
                   )}
@@ -160,6 +116,13 @@ function Questions(props) {
   );
 };
 
+function CheckBox (props) {
+  const [check, setCheck] = useState(false);
+  return (
+    <input type="checkbox" {...props} checked={check} onClick={() => setCheck(state => !state)}></input>
+  )
+}
+
 function reducer (state, action) {
     switch (action.type) {
         case 'next':
@@ -169,6 +132,29 @@ function reducer (state, action) {
         default:
           return state
     }
+}
+
+const random = (min = 0, max = 50) => {
+  let num = Math.random() * (max - min) + min;
+
+  return Math.round(num);
+};
+
+function randomAnswer(correct, incorrect) {
+	let result = [...incorrect];
+  
+  
+	// Dimana seharusnya correct value berada
+  const correctIndex = random(0, incorrect.length);
+  
+  // Check Jika memang nilainya undefined
+  if(result[correctIndex] === undefined) result[correctIndex] = correct
+  else {
+  	result.push(result[correctIndex]);
+    result[correctIndex] = correct;
+  }
+  
+  return result
 }
 
 //  Styled Component

@@ -12,13 +12,17 @@ export const sendQuestions = createAsyncThunk('questions/sendQuestions', async (
         urlData.append('questions', JSON.stringify(data.results));
 
         // Send to server
-        if(data.results.length > 0) await fetch(`http://localhost:8000/user/quiz`, {
-          body: urlData.toString(), 
-          method: 'post', 
-          headers: {
-            'Content-type' : 'application/vnd.api+json'
-          }
-        });
+        if(data.results.length === 0) alert("soal tidak ditemukan, coba lagi")
+        else {
+          await fetch(`http://localhost:8000/user/quiz`, {
+            body: urlData.toString(), 
+            method: 'post', 
+            headers: {
+                'Content-type' : 'application/vnd.api+json'
+            }
+          });
+
+        }
 
 
         return ({results: data.results, userID, name})

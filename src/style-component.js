@@ -13,6 +13,15 @@ export const Container = styled.div`
     gap: 1.5rem 0;
 `;
 
+export const Heading = styled.h1`
+   @media (max-width: 576px) {
+       & {
+           font-size: 1.5rem;
+       }
+   }
+ 
+`;
+
 export const Form = styled.form`
   width: 100%;
   display: grid;

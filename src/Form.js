@@ -114,11 +114,12 @@ function Form (props) {
     const {loading, questions} = useSelector(state => state.questions);
     
     const onSubmit = (data) => {
-      const url = `https://opentdb.com/api.php?amount=${data.total}&category=${data.category.value}&difficulty=${data.dificult[0].toLowerCase()}&type=${data.mode[0]}`;
+      const url = `https://opentdb.com/api.php?amount=${data.total}&category=${data.category.value}&difficulty=${data.dificult[0].toLowerCase()}&type=${data.mode[0].toLowerCase()}`;
 
       // Kirim 
       dispatch(sendQuestions({url, userID: uuid4(), name: data.name}))
     };
+
     const atLeastOne = () => {
       let value = getValues("dificult");
       if(value.length > 1) return "can only choose one option"

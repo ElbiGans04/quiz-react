@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux"
-import { Container, Button } from './style-component'
+import { Container, Button, Heading } from './style-component'
 import styled from 'styled-components'
+import {Redirect} from 'react-router-dom'
+
 function Finish () {
-    const [result, setResult] = useState({});
-    const [again, setAgain] = useState(false);
+ 
+    const [result, setResult] = useState(false);
     const questions = useSelector(state => state.questions)
 
     // Kirim Jawaban Ke server
@@ -33,7 +35,7 @@ function Finish () {
         };
 
         sendAnswers()
-    }, [ questions, again ]);
+    }, [ questions]);
     
     return (
         <Container2>
@@ -51,8 +53,11 @@ function Finish () {
                 </ContainerMainContent>
             </ContainerMain>
             <ContainerFooter>
-                <Button onClick={() => setAgain(state => !state)}>See the highest score</Button>
-                <Button onClick={() => setAgain(state => !state)}>Play Again</Button>
+                <Redirect to="/score" component={() => <Button>See the highest score</Button>} />
+                
+                <Button>
+                    <a style={{width: '100%', height: '100%', textDecoration: `none`, color: 'white'}} href="/">Play Again</a>
+                </Button>
             </ContainerFooter>
             </>
             ) : (<div className="loader"></div>)
@@ -65,14 +70,7 @@ const Container2 = styled(Container)`
     grid-template-rows: 1fr;
 `;
 
-const Heading = styled.h1`
-   @media (max-width: 576px) {
-       & {
-           font-size: 1.5rem;
-       }
-   }
- 
-`;
+
 const ContainerMain = styled.div`
     display: grid;
     justify-items: center;
