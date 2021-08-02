@@ -42,7 +42,6 @@ const AppContainer = styled.div`
   justify-items: center;
   user-select: none;
   overflow: hidden;
-  padding: 1rem 0;
   `;
   
 const MainContainer = styled.main`

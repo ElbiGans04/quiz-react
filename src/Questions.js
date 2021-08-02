@@ -19,7 +19,7 @@ function Questions(props) {
   const question = questions[number];
 
   // Random Jawaban
-  const answersOption = question?.type != 'boolean' ? randomAnswer(question?.correct_answer, question?.incorrect_answers) : ['True', 'False'];
+  const answersOption = question?.type !== 'boolean' ? randomAnswer(question?.correct_answer, question?.incorrect_answers) : ['True', 'False'];
 
   useEffect(() => {
     if (finish) dispatch(answersAdd(answers));
@@ -49,14 +49,26 @@ function Question({ question, number, questionsLength, answersOption, dispatchRe
     getValues,
     handleSubmit,
     setValue,
-  } = useForm();
+    reset
+  } = useForm({defaultValues: {
+    question: [answersOption[0]]
+  }});
+
+  const [lastNumber, setLastNumber] = useState(0);
+
+  // console.log(number, lastNumber)
+  // // Sementara
+  // if(lastNumber !== number) {
+  //   reset({question: [answersOption[0]]})
+  //   // setLastNumber(number);
+  // }
 
   // Callback
   const atLeastOne = () => {
     let value = getValues("question");
-    if (value.length > 1) return "can only choose one option";
+    if (value.length > 1) return "can only choose one answer";
     if (value.length === 1) return true;
-    return "Please Choose at least one question";
+    return "Please Choose at least one answer";
   };
 
   const submitHandle = (value) => {
@@ -81,7 +93,7 @@ function Question({ question, number, questionsLength, answersOption, dispatchRe
       </Header>
       <Main>
         <MainQuestion>
-          <Heading>{question.question}</Heading>
+          <Heading>{decodeHtml(question.question)}</Heading>
         </MainQuestion>
         <MainAnswer onSubmit={handleSubmit(submitHandle)}>
           {answersOption.map((value, index) => {
@@ -148,6 +160,12 @@ function randomAnswer(correct, incorrect) {
 
     return result;
   }
+}
+
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
 }
 
 //  Styled Component
