@@ -38,7 +38,7 @@ const AppContainer = styled.div`
   background-color: var(--bg-secondary);
   border-radius: 1rem;
   display: grid;
-  grid-template-rows: 1fr 2fr;
+  grid-template-rows: 1fr 3fr;
   justify-items: center;
   user-select: none;
   overflow: hidden;

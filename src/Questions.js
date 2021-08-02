@@ -49,35 +49,25 @@ function Question({ question, number, questionsLength, answersOption, dispatchRe
     getValues,
     handleSubmit,
     setValue,
-    reset
-  } = useForm({defaultValues: {
-    question: [answersOption[0]]
-  }});
-
-  const [lastNumber, setLastNumber] = useState(0);
-
-  // console.log(number, lastNumber)
-  // // Sementara
-  // if(lastNumber !== number) {
-  //   reset({question: [answersOption[0]]})
-  //   // setLastNumber(number);
-  // }
+    unregister
+  } = useForm();
 
   // Callback
   const atLeastOne = () => {
-    let value = getValues("question");
+    let value = getValues(`question${number}`);
     if (value.length > 1) return "can only choose one answer";
     if (value.length === 1) return true;
     return "Please Choose at least one answer";
   };
 
   const submitHandle = (value) => {
-    // Check Jika ini soal terakhir
+    unregister(`question${number}`)
+    //Check Jika ini soal terakhir
     if (questionsLength - 1 === number)
-      dispatchReducer({ type: "final", payload: { value: value.question[0] } });
+      dispatchReducer({ type: "final", payload: { value: value[`question${number}`][0] } });
     else {
-      setValue("question", []);
-      dispatchReducer({ type: "next", payload: { value: value.question[0] } });
+      setValue(`question${number}`, []);
+      dispatchReducer({ type: "next", payload: { value: value[`question${number}`][0] } });
     }
   };
 
@@ -103,14 +93,14 @@ function Question({ question, number, questionsLength, answersOption, dispatchRe
                   type="checkbox"
                   defaultChecked={false}
                   value={value}
-                  {...register("question", { validate: atLeastOne })}
+                  {...register(`question${number}`, { validate: atLeastOne })}
                 ></input>
                 <label>{value}</label>
               </MainAnswerRows>
             );
           })}
           {errors.question && (
-            <ErrorAlert>{errors.question.message}</ErrorAlert>
+            <ErrorAlert>{errors[`question${number}`][`message`]}</ErrorAlert>
           )}
           <Button type="submit">Send</Button>
         </MainAnswer>

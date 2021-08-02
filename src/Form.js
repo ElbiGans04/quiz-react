@@ -144,7 +144,7 @@ function Form (props) {
                   <FormContentRows>
                     <FormContentRowsMain>
                       <Label htmlFor="mainName">Name :</Label>
-                      <Input {...register("name", {required: 'please insert name'})} name="name" title="name" id="mainName"></Input>
+                      <Input {...register("name", {required: 'please insert name', maxLength: {value: 20, message: 'max 20 characters'}})} name="name" title="name" id="mainName"></Input>
                     </FormContentRowsMain>
                         {
                           errors.name && 
