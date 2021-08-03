@@ -69,6 +69,12 @@ function Finish () {
 
 const Container2 = styled(Container)`
     grid-template-rows: 1fr;
+    
+    @media (max-width: 768px) {
+        & {
+            height: 70vh;
+        }
+    }
 `;
 
 

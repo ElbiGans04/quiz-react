@@ -24,7 +24,6 @@ export const sendQuestions = createAsyncThunk('questions/sendQuestions', async (
 
         }
 
-
         return ({results: data.results, userID, name})
 
       } catch (err) {
@@ -55,6 +54,7 @@ const questionsSlice = createSlice({
             .addCase(sendQuestions.pending, (state, action) => {
                 state.loading = 'loading';
             }).addCase(sendQuestions.fulfilled, (state, action) => {
+                console.log(action)
                 state.questions = [...action.payload.results];
                 state.userID = `${action.payload.userID}`;
                 state.loading = 'iddle';

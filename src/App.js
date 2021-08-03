@@ -9,7 +9,9 @@ function App() {
   return (
     <Routers>
       <AppContainer>
-        <Heading>Quiz Game</Heading>
+        <Heading>
+          <a href="/" style={{color: 'var(--header)'}}>Quiz Game</a>
+        </Heading>
         <MainContainer>
           <Switch>
             <Route exact path="/" component={Form}></Route>
@@ -30,18 +32,24 @@ export default App;
 //  Styled Components
 
 const AppContainer = styled.div`
-  width: 80%;
-  height: 90vh;
-  align-items: center;
-  box-sizing: border-box;
-  box-shadow: var(--boxShadow);
-  background-color: var(--bg-secondary);
-  border-radius: 1rem;
-  display: grid;
-  grid-template-rows: 1fr 3fr;
-  justify-items: center;
-  user-select: none;
-  overflow: hidden;
+    width: 80%;
+    height: 90vh;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: var(--boxShadow);
+    background-color: var(--bg-secondary);
+    border-radius: 1rem;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    justify-items: center;
+    user-select: none;
+    overflow: auto;
+
+    @media (max-width: 768px) {
+      & {
+        height: 100%;
+      }
+    }
   `;
   
 const MainContainer = styled.main`
@@ -50,12 +58,13 @@ const MainContainer = styled.main`
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   box-sizing: border-box;
   box-shadow: var(--boxShadow);
   padding: 1rem;
   &::-webkit-scrollbar {
     width: .5rem;
+    height: .5rem;
   }
   
   /* Track */

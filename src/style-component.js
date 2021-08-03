@@ -24,6 +24,7 @@ export const Heading = styled.h1`
 
 export const Form = styled.form`
   width: 100%;
+  height: 100%;
   display: grid;
   gap: 1rem;
   justify-items: center;
