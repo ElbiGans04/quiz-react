@@ -36,6 +36,10 @@ function Finish () {
 
         sendAnswers()
     }, [ questions]);
+
+    useEffect(() => {
+        document.title = 'Congratulations!'
+    }, [])
     
     return (
         <Container2>

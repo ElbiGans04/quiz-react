@@ -6,7 +6,7 @@ import {sendQuestions} from './features/questions/questionsSlice'
 import {Redirect} from 'react-router-dom'
 import { v4 as uuid4 } from 'uuid'
 import { Form as FormComponent, FormContent, FormContentRows, FormContentRowsMain ,FormFooter, Button, ErrorAlert } from './style-component'
-
+import {useEffect} from 'react'
 
 const category = [
     {
@@ -112,6 +112,10 @@ function Form (props) {
     const {register, control ,handleSubmit, formState : { errors }, getValues } = useForm();
     const dispatch = useDispatch();
     const {loading, questions} = useSelector(state => state.questions);
+
+    useEffect(() => {
+      document.title = 'Set the quiz settings'
+    }, [])
     
     const onSubmit = (data) => {
       const url = `https://opentdb.com/api.php?amount=${data.total}&category=${data.category.value}&difficulty=${data.dificult[0].toLowerCase()}&type=${data.mode[0].toLowerCase()}`;

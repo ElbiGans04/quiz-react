@@ -13,6 +13,11 @@ function Score () {
         if (!results) fetchData()
     }, [results]);
 
+
+    useEffect(() => {
+        document.title = 'Score'
+    }, [])
+
     return (
         <Container>
             <ContainerMain>
@@ -21,6 +26,7 @@ function Score () {
                     <Header>Date</Header>
                     <Header>Score</Header>
                     <Header>Difficult</Header>
+                    <Header>Length</Header>
                 </ContainerMainHeader>
                 <ContainerMainMain>
                     {
@@ -32,6 +38,7 @@ function Score () {
                                         <MainText>{`${new Date(result.createdAt).getDate()}-${new Date(result.createdAt).getMonth()}-${new Date(result.createdAt).getFullYear()}`}</MainText>
                                         <MainText>{result.score || '0'}</MainText>
                                         <MainText>{result.questions[0].difficulty}</MainText>
+                                        <MainText>{result.questions.length}</MainText>
                                     </ContainerMainMainRowContent>
                                     <ContainerMainMainRowDetail></ContainerMainMainRowDetail>
                                 </ContainerMainMainRow>
@@ -82,7 +89,7 @@ const ContainerMainHeader = styled.div`
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     justify-items: center;
     align-items: center;
 `;
@@ -125,7 +132,7 @@ const ContainerMainMainRow = styled.div`
 const ContainerMainMainRowContent = styled.div`
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     justify-items: center;
     align-items: center;
 `;
