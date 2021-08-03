@@ -1,9 +1,14 @@
+import React from 'react';
 import styled from "styled-components";
 import {BrowserRouter as Routers, Redirect, Route, Switch} from 'react-router-dom';
 import Form from './Form.js';
-import Questions from './Questions.js';
-import Finish from './Finish.js';
-import Score from './Score.js';
+// import Questions from './Questions.js';
+// import Finish from './Finish.js';
+// import Score from './Score.js';
+
+const Questions = React.lazy(() => import(`./Questions.js`));
+const Finish = React.lazy(() => import(`./Finish.js`));
+const Score = React.lazy(() => import(`./Score.js`));
 
 function App() {  
   return (
@@ -15,9 +20,9 @@ function App() {
         <MainContainer>
           <Switch>
             <Route exact path="/" component={Form}></Route>
-            <Route path="/questions" component={Questions}></Route>
-            <Route path="/finish" component={Finish}></Route>
-            <Route path="/score" component={Score}></Route>
+            <Route path="/questions" component={() => (<React.Suspense fallback={<div className="loader"></div>}><Questions></Questions></React.Suspense>)}></Route>
+            <Route path="/finish"  component={() => (<React.Suspense fallback={<div className="loader"></div>}><Finish></Finish></React.Suspense>)}></Route>
+            <Route path="/score"  component={() => (<React.Suspense fallback={<div className="loader"></div>}><Score></Score></React.Suspense>)}></Route>
             <Route path="*" component={() => (<Redirect to="/"></Redirect>)}></Route>
           </Switch>
         </MainContainer>
